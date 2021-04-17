@@ -175,7 +175,8 @@ NOTES:
  *   Rating: 1
  */
 int bitAnd(int x, int y) {
-  return 2;
+  /* use De Morgan's law for bit and operation */
+  return ~(~x | ~y);
 }
 /* 
  * thirdBits - return word with every third bit (starting from the LSB) set to 1
@@ -184,7 +185,13 @@ int bitAnd(int x, int y) {
  *   Rating: 1
  */
 int thirdBits(void) {
-  return 2;
+  int word = 73;
+  int pattern = word << 3 | 1;
+  int result = pattern; 
+
+  result |= pattern << 12;
+  result |= word << 24;
+  return result;
 }
 /* 
  * allEvenBits - return 1 if all even-numbered bits in word set to 1
@@ -194,7 +201,11 @@ int thirdBits(void) {
  *   Rating: 2
  */
 int allEvenBits(int x) {
-  return 2;
+  int one_byte = 85;
+  int two_byte = one_byte << 8 | one_byte; 
+  int four_byte = two_byte << 16 | two_byte; 
+
+  return x & four_byte;
 }
 /* 
  * byteSwap - swaps the nth byte and the mth byte
