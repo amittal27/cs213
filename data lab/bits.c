@@ -201,12 +201,14 @@ int thirdBits(void) {
  *   Rating: 2
  */
 int allEvenBits(int x) {
+  // TODO: somehow implement == so we return 0 when this is false
   int one_byte = 85;
   int two_byte = one_byte << 8 | one_byte; 
   int four_byte = two_byte << 16 | two_byte; 
-  int result = x & four_byte;
+  int result = x & four_byte; // four_byte if true
+  int random = ~(result ^ four_byte);
 
-  return (result ^ four_byte) + 1;
+  return (random & 1);
 }
 /* 
  * byteSwap - swaps the nth byte and the mth byte
