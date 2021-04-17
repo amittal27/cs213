@@ -204,8 +204,9 @@ int allEvenBits(int x) {
   int one_byte = 85;
   int two_byte = one_byte << 8 | one_byte; 
   int four_byte = two_byte << 16 | two_byte; 
+  int result = x & four_byte;
 
-  return x & four_byte;
+  return (result ^ four_byte) + 1;
 }
 /* 
  * byteSwap - swaps the nth byte and the mth byte
