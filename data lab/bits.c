@@ -201,15 +201,14 @@ int thirdBits(void) {
  *   Rating: 2
  */
 int allEvenBits(int x) {
-  //TODO: not finished
+  /* compare to a pattern 0x55555555 and see if the resulting "and" is 0 */
   int one_byte = 85;
   int two_byte = one_byte << 8 | one_byte; 
   int four_byte = two_byte << 16 | two_byte; 
-  /* int anti_pattern = four_byte << 1; */
   int matched_pattern = x & four_byte; //will return four_byte only if all evens. 
   int four_byte_difference = matched_pattern ^ four_byte; // will return 0 only if the matched pattern is the same as four_byte (all evens)
 
-  return ! four_byte_difference; // matched_pattern ^ four_byte + 1;
+  return !four_byte_difference; // matched_pattern ^ four_byte + 1;
 }
 /* 
  * byteSwap - swaps the nth byte and the mth byte
@@ -220,8 +219,41 @@ int allEvenBits(int x) {
  *  Max ops: 25
  *  Rating: 2
  */
-int byteSwap(int x, int n, int m) {
-    return 2;
+int byteSwap(int x, int n, int m) { 
+  // isolate bits n and m
+  int byte1 = 255 << 8 * n;
+  int byte2 = 255 << 8 * m;
+  int sum_bytes = ~(byte1 + byte2);
+  int result = sum_bytes & x; // 0s in place of swap bytes
+  int actual1 = byte1 & x;
+  int actual2 = byte2 & x;
+
+  //sawp
+  actual2 = actual1^(actual1^actual2);
+  actual1 = actual2^(actual1^actual2);
+
+  result |= actual1;
+  result |= actual2;
+
+  return result;
+  
+  
+  // int first_byte_pattern = 255;
+  // int first_byte = first_byte_pattern & x; // first actual byte (LSB) (byte 0)
+  // int second_byte_pattern = 255 << 8;
+  // int second_byte = second_byte_pattern & x; // second actual byte
+  // int third_byte_pattern = 255 << 16;
+  // int third_byte = third_byte_pattern & x; // third actual byte
+  // int fourth_byte_pattern = 255 << 24;
+  // int fourth_byte = fourth_byte_pattern & x; // fourth actual byte (MSB) (byte 3)
+
+  // int is_m_1 = !(m ^ 0) << 16 ;
+
+  // !(m ^ 1)
+
+  // int new_word = 
+  // //
+  // return 2;
 }
 /* 
  * conditional - same as x ? y : z 
