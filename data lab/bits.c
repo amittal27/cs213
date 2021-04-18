@@ -219,21 +219,24 @@ int allEvenBits(int x) {
  *  Max ops: 25
  *  Rating: 2
  */
-int byteSwap(int x, int n, int m) { 
+int byteSwap(int x, int n, int m) {  // x = 80 00 00 00, n = 0 m = 3
   // isolate bits n and m
-  int byte1 = 255 << 8 * n;
-  int byte2 = 255 << 8 * m;
-  int sum_bytes = ~(byte1 + byte2);
-  int result = sum_bytes & x; // 0s in place of swap bytes
-  int actual1 = byte1 & x;
-  int actual2 = byte2 & x;
-  actual1 = actual1 >> 8*n << 8*m;
-  actual2 = actual2 >> 8*m << 8*n;
+  int byte1_pattern = 255 << 8 * n; // 00 00 00 FF
+  int byte2_pattern = 255 << 8 * m; // FF 00 00 00
+  int sum_bytes = byte1_pattern | byte2_pattern; // FF 00 00 FF
+  int negated_sum_bytes = ~sum_bytes; // 00 FF FF 00
+  int result = negated_sum_bytes & x; // 00 00 00 00; 0s in place of swap bytes
+  int actual1 = byte1_pattern & x; // 00 00 00 00
+  int actual2 = byte2_pattern & x; // 80 00 00 00
+  actual1 = actual1 >> 8*n << 8*m; // 00 00 00 00
+  actual2 = actual2 >> 8*m << 8*n; // 00 00 00 80
   
-  result |= actual1;
-  result |= actual2;
+  result |= actual1; // 00 00 00 00
+  result |= actual2; // 00 00 00 80
 
   return result;
+
+byteSwap(-2147483648, 0, 3);
   
   
   // int first_byte_pattern = 255;
