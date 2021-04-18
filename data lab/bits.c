@@ -230,6 +230,8 @@ int byteSwap(int x, int n, int m) {
   actual1 = actual1 >> 8*n << 8*m;
   actual2 = actual2 >> 8*m << 8*n;
   
+  printf("%d\n", actual1);
+  printf("%d\n", actual2);
   result |= actual1;
   result |= actual2;
 
