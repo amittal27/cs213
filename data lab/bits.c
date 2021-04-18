@@ -227,11 +227,9 @@ int byteSwap(int x, int n, int m) {
   int result = sum_bytes & x; // 0s in place of swap bytes
   int actual1 = byte1 & x;
   int actual2 = byte2 & x;
-
-  //sawp
-  actual2 = actual1^(actual1^actual2);
-  actual1 = actual2^(actual1^actual2);
-
+  actual1 = actual1 >> 8*n << 8*m;
+  actual2 = actual2 >> 8*m << 8*n;
+  
   result |= actual1;
   result |= actual2;
 
