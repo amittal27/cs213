@@ -451,21 +451,24 @@ int float_f2i(unsigned uf) { //done - 30 ops.
 //8 ops so far
   //denormalized case or exponent < 0 case. note that the normalized case would have negative actual_exp. 
   int actual_exp_is_negative = actual_exp & sign_mask; // 0 if zero or positive, number if negative
+  int actual_exp_is_greater_than_31, out_of_range, result, is_actual_exp_positive;
+
+
   if (actual_exp_is_negative){
     return 0; //return out of range value (the same as negative_sign if negative...)
   }
 //10 ops so far
   //out of range case
-  int actual_exp_is_greater_than_31 = !((actual_exp + (~30))&(sign_mask)) ; //subtract 31 from actual_exp and check + sign
-  int out_of_range = actual_exp_is_greater_than_31;
+  actual_exp_is_greater_than_31 = !((actual_exp + (~30))&(sign_mask)) ; //subtract 31 from actual_exp and check + sign
+  out_of_range = actual_exp_is_greater_than_31;
   if (out_of_range){
     return 0x80000000;
   }
   // normalized case
   frac = (frac << 1) + 1; // add leading 1 of the mantissa
 //17 ops so far
-  int result = 0;
-  int is_actual_exp_positive = 1; //if we got here, actual_exp is positive for the first digit. 
+  result = 0;
+  is_actual_exp_positive = 1; //if we got here, actual_exp is positive for the first digit. 
   while (is_actual_exp_positive){
     result = result + ((frac & 1) << actual_exp); //get last frac digit. 
 
