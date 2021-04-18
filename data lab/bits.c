@@ -287,8 +287,8 @@ int bitParity(int x) {
  *   Rating: 1
  */
 int tmax(void) {
-  // return 0 and all 1s. FF shift
-  return ((1 << 31) - 1) + (1 << 31);
+  // return 0 and all 1s. FF shift 
+  return ((1 << 31) - 1);
 }
 /* 
  * sign - return 1 if positive, 0 if zero, and -1 if negative
