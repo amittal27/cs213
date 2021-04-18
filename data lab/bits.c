@@ -288,7 +288,7 @@ int conditional(int x, int y, int z) {
  *   Max ops: 20
  *   Rating: 4
  */
-int bitParity(int x) {
+int bitParity(int x) { //done - 18 ops
   int word = x;
   int pattern_16bit = (255 << 8) + 255; //first 16 bit are zero, last 16 bit are one. 
   word = (word >> 16) ^ (word & pattern_16bit); //symmetric difference, evens cancel out. 
@@ -326,8 +326,21 @@ int tmax(void) { //done - 4 ops
  *  Max ops: 10
  *  Rating: 2
  */
-int sign(int x) {
-    return 2;
+int sign(int x) { //done - 10 ops
+  int number = x;
+  int minus_one = ~0; // 32-bit all ones. 
+  //printf("Number\t%d\n", number);
+  int is_negative = (number >> 31) ^ 1; // by arithmetic shift, this is -2 if negative, 1 if positive or 0
+  int is_not_negative = !(is_negative + minus_one); // 0 if negative, 1 if positive or 0. 
+  //printf("is_negative\t%d\n", is_negative);
+  //printf("is_not_negative\t%d\n", is_not_negative);
+  
+  int is_0 = !number; // this is 1 if it is 0, and 0 if it is not 0. 
+  int is_not_0 = !is_0; // now, this is 0 if it is 0, and 1 if it is not zero. 
+  int is_positive = is_not_0 & is_not_negative;
+  //printf("is_positive\t%d\n", is_positive);
+
+  return minus_one + is_not_negative + is_positive;
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
