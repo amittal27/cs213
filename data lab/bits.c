@@ -226,13 +226,14 @@ int byteSwap(int x, int n, int m) {  // x = 80 00 00 00, n = 0 m = 3
   int sum_bytes = byte1_pattern | byte2_pattern; // FF 00 00 FF
   int negated_sum_bytes = ~sum_bytes; // 00 FF FF 00
   int result = negated_sum_bytes & x; // 00 00 00 00; 0s in place of swap bytes
-  int actual1 = byte1_pattern & x; // 00 00 00 00
-  int actual2 = byte2_pattern & x; // 80 00 00 00
+  unsigned int actual1 = byte1_pattern & x; // 00 00 00 00
+  unsigned int actual2 = byte2_pattern & x; // 80 00 00 00
+  
   actual1 = actual1 >> 8*n << 8*m; // 00 00 00 00
   actual2 = actual2 >> 8*m << 8*n; // 00 00 00 80
   
-  printf("%d\n", actual1);
-  printf("%d\n", actual2);
+  printf("actual1: %d\n", actual1);
+  printf("actual2: %d\n", actual2);
   result |= actual1;
   result |= actual2;
   return result;
