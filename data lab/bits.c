@@ -228,17 +228,18 @@ int byteSwap(int x, int n, int m) {  // x = 80 00 00 00, n = 0 m = 3
   int result = negated_sum_bytes & x; // 00 00 00 00; 0s in place of swap bytes
   unsigned int actual1 = byte1_pattern & x; // 00 00 00 00
   unsigned int actual2 = byte2_pattern & x; // 80 00 00 00
-  
   actual1 = actual1 >> 8*n << 8*m; // 00 00 00 00
   actual2 = actual2 >> 8*m << 8*n; // 00 00 00 80
   
-  printf("actual1: %d\n", actual1);
-  printf("actual2: %d\n", actual2);
-  result |= actual1;
-  result |= actual2;
+  result |= actual1; // 00 00 00 00
+  result |= actual2; // 00 00 00 80
+
+  printf("%d\n", actual1);
+  printf("%d\n", actual2);
+
   return result;
 
-byteSwap(-2147483648, 0, 3);
+//byteSwap(-2147483648, 0, 3);
   
   
   // int first_byte_pattern = 255;
@@ -266,7 +267,7 @@ byteSwap(-2147483648, 0, 3);
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return 2;
+  return (x & y) | (~x & z);
 }
 /*
  * bitParity - returns 1 if x contains an odd number of 0's
@@ -286,7 +287,8 @@ int bitParity(int x) {
  *   Rating: 1
  */
 int tmax(void) {
-  return 2;
+  // return 0 and all 1s. FF shift
+  return ((1 << 31) - 1) + (1 << 31);
 }
 /* 
  * sign - return 1 if positive, 0 if zero, and -1 if negative
