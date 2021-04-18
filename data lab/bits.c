@@ -267,7 +267,19 @@ int byteSwap(int x, int n, int m) {  // x = 80 00 00 00, n = 0 m = 3
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return (x & y) | (~x & z);
+  /* or all of the bits together so that the entire word is filled with 1s if at least one 1 is present */
+  // x |= x >> 1;
+  // x |= x << 1;
+  // x |= x >> 2;
+  // x |= x << 2;
+  // x |= x >> 4;
+  // x |= x << 4;
+  // x |= x >> 8;
+  // x |= x << 8;
+  // x |= x >> 16;
+  // x |= x << 16;
+  // return (x & y) | (~x & z);
+  return (x & y) | ((!x >> 1) & z);
 }
 /*
  * bitParity - returns 1 if x contains an odd number of 0's
