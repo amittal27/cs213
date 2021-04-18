@@ -174,7 +174,7 @@ NOTES:
  *   Max ops: 8
  *   Rating: 1
  */
-int bitAnd(int x, int y) {
+int bitAnd(int x, int y) { //done - 4 ops
   /* use De Morgan's law for bit and operation */
   return ~(~x | ~y);
 }
@@ -184,7 +184,7 @@ int bitAnd(int x, int y) {
  *   Max ops: 8
  *   Rating: 1
  */
-int thirdBits(void) {
+int thirdBits(void) { //done - 6 ops
   int word = 73;
   int pattern = word << 3 | 1;
   int result = pattern; 
@@ -200,7 +200,7 @@ int thirdBits(void) {
  *   Max ops: 12
  *   Rating: 2
  */
-int allEvenBits(int x) {
+int allEvenBits(int x) { //done - 7 ops
   /* compare to a pattern 0x55555555 and see if the resulting "and" is 0 */
   int one_byte = 85;
   int two_byte = one_byte << 8 | one_byte; 
@@ -289,7 +289,20 @@ int conditional(int x, int y, int z) {
  *   Rating: 4
  */
 int bitParity(int x) {
-  return 2;
+  int word = x;
+  int pattern_16bit = (255 << 8) + 255; //first 16 bit are zero, last 16 bit are one. 
+  word = (word >> 16) ^ (word & pattern_16bit); //symmetric difference, evens cancel out. 
+  int pattern_8bit = 255;
+  word = (word >> 8) ^ (word & pattern_8bit);
+  int pattern_4bit = 15;
+  word = (word >> 4) ^ (word & pattern_4bit);
+  int pattern_2bit = 3;
+  word = (word >> 2) ^ (word & pattern_2bit);
+  int pattern_1bit = 1;
+  int result = (word >> 1) ^ (word & pattern_1bit); //if it is 1, odd number. otherwise, 0. 
+  result = result & 1; //discard leading 1s (on the left) from the arithmetic right shifts. 
+
+  return result;
 }
 /* Two's complement arithmetic */
 /* 
@@ -298,9 +311,12 @@ int bitParity(int x) {
  *   Max ops: 4
  *   Rating: 1
  */
-int tmax(void) {
+
+int tmax(void) { //done - 4 ops
   // return 0 and all 1s. FF shift 
-  return ((1 << 31) - 1);
+  int pattern_16bit = (255 << 8) + 255;
+
+  return (pattern_16bit << 15) | pattern_16bit;
 }
 /* 
  * sign - return 1 if positive, 0 if zero, and -1 if negative
