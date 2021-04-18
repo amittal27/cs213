@@ -231,8 +231,15 @@ int byteSwap(int x, int n, int m) {  // x = 80 00 00 00, n = 0 m = 3
   actual1 = actual1 >> 8*n << 8*m; // 00 00 00 00
   actual2 = actual2 >> 8*m << 8*n; // 00 00 00 80
   
+<<<<<<< HEAD
   result |= actual1; // 00 00 00 00
   result |= actual2; // 00 00 00 80
+=======
+  printf("%d\n", actual1);
+  printf("%d\n", actual2);
+  result |= actual1;
+  result |= actual2;
+>>>>>>> ac988339bf34ac8b2d20d35b14222b6b5bcbdcdd
 
   return result;
 
