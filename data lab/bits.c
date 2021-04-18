@@ -385,8 +385,18 @@ int absVal(int x) {
  *   Max ops: 10
  *   Rating: 2
  */
-unsigned float_neg(unsigned uf) {
- return 2;
+unsigned float_neg(unsigned uf) { //done - 9 ops
+  int exp_mask = 0xff << 23; //mask for the exponent. 
+  int exp_is_not_all_ones = (uf & exp_mask) ^ exp_mask; // 0 if it is all ones, number if it is not all ones
+  int frac_is_not_all_zeros = uf << 9; // 0 if it is all zeros, number if it is not all 0s
+  int exp_is_all_ones = ! exp_is_not_all_ones;
+
+  int isNaN = exp_is_all_ones && frac_is_not_all_zeros;
+  if (isNaN){ //if this is a NaN, return the same
+    return uf;
+  }
+
+  return (uf) + (1 << 31);
 }
 /* 
  * float_abs - Return bit-level equivalent of absolute value of f for
@@ -399,8 +409,37 @@ unsigned float_neg(unsigned uf) {
  *   Max ops: 10
  *   Rating: 2
  */
-unsigned float_abs(unsigned uf) {
-  return 2;
+unsigned float_abs(unsigned uf) { 
+  // int minus_one = ~0;
+  int exp_mask = 0xff;
+  int exp_on_lsb = uf >> 23; //move the exponent to the least significant byte
+  int isolated_exp = exp_on_lsb & exp_mask; //discard everything else. 
+  int exp_is_not_all_ones = isolated_exp ^ exp_mask; // 0 if all ones, number if not all ones. 
+  int frac_is_not_all_zeros = uf << 9; // 0 if it is all zeros, number if it is not all 0s
+  int frac_is_all_zeros = ! frac_is_not_all_zeros;
+  int is_not_NaN = frac_is_all_zeros || exp_is_not_all_ones;
+
+  // int exp_mask = 0xff << 23; //mask for the exponent. 
+  // int exp_is_not_all_ones = (uf & exp_mask) ^ exp_mask; // 0 if it is all ones, number if it is not all ones
+  // int frac_is_not_all_zeros = uf << 9; // 0 if it is all zeros, number if it is not all 0s
+  // int exp_is_all_ones = ! exp_is_not_all_ones;
+
+  if (is_not_NaN){
+    return (uf) & ~((1 << 31));
+    //return (uf) & ((1 << 31) + minus_one); //make the last bit 0.
+    // ~(~uf | (1<<31))
+    // (uf & ~(1<<31))
+  }
+  return uf;
+
+  // int isNaN = exp_is_all_ones && frac_is_not_all_zeros;
+  // if (isNaN){ //if this is a NaN, return the same
+  //   return uf;
+  // }
+
+  // else{ //otherwise, change sign
+  //   return (uf) & ((1 << 31) + minus_one); //make the last bit 0. 
+  // }
 }
 /* 
  * float_f2i - Return bit-level equivalent of expression (int) f
