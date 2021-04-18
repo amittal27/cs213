@@ -279,7 +279,7 @@ int conditional(int x, int y, int z) {
   // x |= x >> 16;
   // x |= x << 16;
   // return (x & y) | (~x & z);
-  return (x & y) | ((!x >> 1) & z);
+  return ((~(!x >> 1) & ~x) & y) | ((!x >> 1) & z);
 }
 /*
  * bitParity - returns 1 if x contains an odd number of 0's
