@@ -234,8 +234,8 @@ int byteSwap(int x, int n, int m) {  // x = 80 00 00 00, n = 0 m = 3
   result |= actual1; // 00 00 00 00
   result |= actual2; // 00 00 00 80
 
-  printf("%d\n", actual1);
-  printf("%d\n", actual2);
+  //printf("%d\n", actual1);
+  //printf("%d\n", actual2);
 
   return result;
 
