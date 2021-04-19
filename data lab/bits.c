@@ -342,11 +342,19 @@ int sign(int x) { //done - 10 ops
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
+  // case 1: different signs
+
+  // case 2: same sign
+  // y-x >= 0 if true; y-x < 0 if false
   int negative_x = ~x + 1;
   int sum = y + negative_x;
-  int is_negative = sum >> 31;
- 
-  return is_negative + 1;
+
+  // subtract: if sum > 0 [x > y], return 1
+  int is_negative = sum >> 31; // will be all 0s if positive
+  int is_less_or_equal = is_negative + 1;
+  
+  // else (sum < 0); return 0
+  return is_less_or_equal;// | !!sum;
 }
 /* 
  * isPositive - return 1 if x > 0, return 0 otherwise 
