@@ -1,7 +1,7 @@
 /* 
  * CS:APP Data Lab 
  * 
- * <Please put your name and userid here>
+Names: Angeli Mittal, Felix Haba NETIDs: ..., fhr2592
  * 
  * bits.c - Source file with your solutions to the Lab.
  *          This is the file you will hand in to your instructor.
@@ -441,35 +441,38 @@ unsigned float_abs(unsigned uf) {  //done - 10 ops
  *   Max ops: 30
  *   Rating: 4
  */
-int float_f2i(unsigned uf) {
+int float_f2i(unsigned uf) { //done - 30 ops. 
   //lets start with the normalized case. 
   int number = uf;
   int minus_one = ~0;
-  int sign_mask = (1<<31);
+  int sign_mask = 1<<31;
   int negative_sign = number & sign_mask; // 0 if it is positive, 0x80000000 if it is negative. 
 
-  int exp_on_lsb = uf >> 23; //move the exponent to the least significant byte
+  int exp_on_lsb = number >> 23; //move the exponent to the least significant byte
   int isolated_exp = exp_on_lsb & 0xff; //discard everything else.
   int frac = number & 0x008fffff;
   int actual_exp =  isolated_exp + (~ 126); //subtract the bias (~126 is -127). this follows from ~0 = -1 and ~1 = -2
+//8 ops so far
+  //denormalized case or exponent < 0 case. note that the normalized case would have negative actual_exp. 
+  int actual_exp_is_negative = actual_exp & sign_mask; // 0 if zero or positive, number if negative
+  int actual_exp_is_greater_than_31, out_of_range, result, is_actual_exp_positive;
 
-  //denormalized case or exponent < 0 case. 
-  int exp_is_all_zeros = !(isolated_exp^0); // 0 if exp is all zeros, 1 if it is not all zeros
-  int exponent_is_negative = actual_exp & sign_mask; // 0 if zero or positive, number if negative
-  if (exp_is_all_zeros || exponent_is_negative){
+
+  if (actual_exp_is_negative){
     return 0; //return out of range value (the same as negative_sign if negative...)
   }
-
+//10 ops so far
   //out of range case
-  int greater_than_31 = !((actual_exp + (~30))&(sign_mask)) ; //subtract 31 from actual_exp and check + sign
-  int out_of_range = (greater_than_31);
+  actual_exp_is_greater_than_31 = !((actual_exp + (~30))&(sign_mask)) ; //subtract 31 from actual_exp and check + sign
+  out_of_range = actual_exp_is_greater_than_31;
   if (out_of_range){
     return 0x80000000;
   }
-  int result = 1 << actual_exp; // leading 1 of the mantissa 
-
-  actual_exp = actual_exp + minus_one;
-  int is_actual_exp_positive = !(actual_exp & sign_mask); //check that sign is not negative. 
+  // normalized case
+  frac = (frac << 1) + 1; // add leading 1 of the mantissa
+//17 ops so far
+  result = 0;
+  is_actual_exp_positive = 1; //if we got here, actual_exp is positive for the first digit. 
   while (is_actual_exp_positive){
     result = result + ((frac & 1) << actual_exp); //get last frac digit. 
 
@@ -477,10 +480,11 @@ int float_f2i(unsigned uf) {
     actual_exp = actual_exp + minus_one;
     is_actual_exp_positive = !(actual_exp & sign_mask);
   }
-
+//25 ops so far
   if (negative_sign){
-    result = ~result + 1;
+    result = ~result + 1; //change sign
     result = result | negative_sign;
   }
   return result | negative_sign;
 }
+//30 ops
