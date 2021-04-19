@@ -384,9 +384,8 @@ int isPositive(int x) { // done - 7 ops
  *   Max ops: 10
  *   Rating: 4
  */
-int absVal(int x) { // done - 7 ops
+int absVal(int x) { // done - 5 ops
   int x_sign = x >> 31; // 0 if positive, -1 if negative
-  int negative_x = ~x + 1;
 
   return (x_sign ^ x) + (!!x_sign);
 }
