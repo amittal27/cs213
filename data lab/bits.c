@@ -260,16 +260,18 @@ int conditional(int x, int y, int z) { // done - 8 ops
  */
 int bitParity(int x) { //done - 18 ops
   int word = x;
-  int pattern_16bit = (255 << 8) + 255; //first 16 bit are zero, last 16 bit are one. 
-  word = (word >> 16) ^ (word & pattern_16bit); //symmetric difference, evens cancel out. 
+  int pattern_16bit = (255 << 8) + 255; //first 16 bit are zero, last 16 bit are one.
   int pattern_8bit = 255;
-  word = (word >> 8) ^ (word & pattern_8bit);
   int pattern_4bit = 15;
-  word = (word >> 4) ^ (word & pattern_4bit);
   int pattern_2bit = 3;
-  word = (word >> 2) ^ (word & pattern_2bit);
   int pattern_1bit = 1;
-  int result = (word >> 1) ^ (word & pattern_1bit); //if it is 1, odd number. otherwise, 0. 
+  int result = 0;
+
+  word = (word >> 16) ^ (word & pattern_16bit); //symmetric difference, evens cancel out. 
+  word = (word >> 8) ^ (word & pattern_8bit);
+  word = (word >> 4) ^ (word & pattern_4bit);
+  word = (word >> 2) ^ (word & pattern_2bit);
+  result = (word >> 1) ^ (word & pattern_1bit); //if it is 1, odd number. otherwise, 0. 
   result = result & 1; //discard leading 1s (on the left) from the arithmetic right shifts. 
 
   return result;
