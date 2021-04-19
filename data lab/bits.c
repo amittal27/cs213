@@ -388,9 +388,9 @@ int absVal(int x) {
   max_positive |= max_positive << 8;
   max_positive |= max_positive << 15;
 
-  printf("%d\n", max_positive);
+  printf("%d\n", (1 & !(x >> 32)));
 
-  return max_positive & ~x + 1;
+  return max_positive & ~x + (1 & !(x >> 32));
 }
 /* FP operations */
 /* 
