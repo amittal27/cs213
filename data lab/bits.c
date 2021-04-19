@@ -1,7 +1,8 @@
 /* 
  * CS:APP Data Lab 
  * 
-Names: Angeli Mittal, Felix Haba NETIDs: ..., fhr2592
+ * Names: Angeli Mittal, Felix Haba 
+ * NETIDs: amc4261, fhr2592
  * 
  * bits.c - Source file with your solutions to the Lab.
  *          This is the file you will hand in to your instructor.
@@ -185,12 +186,13 @@ int bitAnd(int x, int y) { //done - 4 ops
  *   Rating: 1
  */
 int thirdBits(void) { //done - 6 ops
-  int word = 73;
-  int pattern = word << 3 | 1;
+  /* create 12-bit word that shows up twice in 32-bit word and modify to produce entire word */
+  int word = 73; // 0100 1001; MSbs
+  int pattern = word << 3 | 1; // shows up twice in least-significant 24 bits of 32-bit word
   int result = pattern; 
 
-  result |= pattern << 12;
-  result |= word << 24;
+  result |= pattern << 12; // replicate pattern 12 bits to left
+  result |= word << 24; // MSBs of word
   return result;
 }
 /* 
@@ -205,10 +207,10 @@ int allEvenBits(int x) { //done - 7 ops
   int one_byte = 85;
   int two_byte = one_byte << 8 | one_byte; 
   int four_byte = two_byte << 16 | two_byte; 
-  int matched_pattern = x & four_byte; //will return four_byte only if all evens. 
+  int matched_pattern = x & four_byte; // will return four_byte only if all evens
   int four_byte_difference = matched_pattern ^ four_byte; // will return 0 only if the matched pattern is the same as four_byte (all evens)
 
-  return !four_byte_difference; // matched_pattern ^ four_byte + 1;
+  return !four_byte_difference;
 }
 /* 
  * byteSwap - swaps the nth byte and the mth byte
@@ -228,36 +230,12 @@ int byteSwap(int x, int n, int m) {  // x = 80 00 00 00, n = 0 m = 3
   int result = negated_sum_bytes & x; // 00 00 00 00; 0s in place of swap bytes
   unsigned int actual1 = byte1_pattern & x; // 00 00 00 00
   unsigned int actual2 = byte2_pattern & x; // 80 00 00 00
+
   actual1 = actual1 >> 8*n << 8*m; // 00 00 00 00
   actual2 = actual2 >> 8*m << 8*n; // 00 00 00 80
-  
   result |= actual1; // 00 00 00 00
   result |= actual2; // 00 00 00 80
-
-  //printf("%d\n", actual1);
-  //printf("%d\n", actual2);
-
   return result;
-
-//byteSwap(-2147483648, 0, 3);
-  
-  
-  // int first_byte_pattern = 255;
-  // int first_byte = first_byte_pattern & x; // first actual byte (LSB) (byte 0)
-  // int second_byte_pattern = 255 << 8;
-  // int second_byte = second_byte_pattern & x; // second actual byte
-  // int third_byte_pattern = 255 << 16;
-  // int third_byte = third_byte_pattern & x; // third actual byte
-  // int fourth_byte_pattern = 255 << 24;
-  // int fourth_byte = fourth_byte_pattern & x; // fourth actual byte (MSB) (byte 3)
-
-  // int is_m_1 = !(m ^ 0) << 16 ;
-
-  // !(m ^ 1)
-
-  // int new_word = 
-  // //
-  // return 2;
 }
 /* 
  * conditional - same as x ? y : z 
@@ -267,9 +245,9 @@ int byteSwap(int x, int n, int m) {  // x = 80 00 00 00, n = 0 m = 3
  *   Rating: 3
  */
 int conditional(int x, int y, int z) { // done - 8 ops
-  /* or all of the bits together so that the entire word is filled with 1s if at least one 1 is present */
-  int not_zero = !!x; // if zero, not_zero = 0; otherwise, = 1
-  int negate = ~not_zero + 1; // negate = 0 if x = 0; otherwise, = FFFF FFFF
+  /* determine if x is 0 then appropriately negate bits to return y or z */
+  int not_zero = !!x; // if x=0 -> 0; x!=0 -> 1
+  int negate = ~not_zero + 1; // if x=0 -> 0; x!=0 -> -1
 
   return (negate & y) | (~negate & z);
 }
