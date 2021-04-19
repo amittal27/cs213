@@ -363,8 +363,11 @@ int isLessOrEqual(int x, int y) {
  *   Max ops: 8
  *   Rating: 3
  */
-int isPositive(int x) {
-  return 2;
+int isPositive(int x) { // done - 7 ops
+  int negate_x = ~x;
+  int zeros_or_ones = negate_x >> 31;
+
+  return !!(zeros_or_ones) & !!x;
 }
 /* 
  * absVal - absolute value of x
@@ -375,7 +378,19 @@ int isPositive(int x) {
  *   Rating: 4
  */
 int absVal(int x) {
-  return 2;
+  // max positive number
+  // and that with x
+
+  //return ~x + 1;
+
+  int max_positive = 255; // two-bit number
+  
+  max_positive |= max_positive << 8;
+  max_positive |= max_positive << 15;
+
+  printf("%d\n", max_positive);
+
+  return max_positive & ~x + 1;
 }
 /* FP operations */
 /* 
