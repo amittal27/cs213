@@ -222,7 +222,8 @@ int allEvenBits(int x) { //done - 7 ops
  *  Rating: 2
  */
 int byteSwap(int x, int n, int m) {  // x = 80 00 00 00, n = 0 m = 3
-  // isolate bits n and m
+  // isolate bits n and m -- use shifts?
+  int n_bytes 
   int byte1_pattern = 255 << 8 * n; // 00 00 00 FF
   int byte2_pattern = 255 << 8 * m; // FF 00 00 00
   int sum_bytes = byte1_pattern | byte2_pattern; // FF 00 00 FF
@@ -231,6 +232,7 @@ int byteSwap(int x, int n, int m) {  // x = 80 00 00 00, n = 0 m = 3
   unsigned int actual1 = byte1_pattern & x; // 00 00 00 00
   unsigned int actual2 = byte2_pattern & x; // 80 00 00 00
 
+  // swap using XOR with 000..nnnn...0000..mmmm
   actual1 = actual1 >> 8*n << 8*m; // 00 00 00 00
   actual2 = actual2 >> 8*m << 8*n; // 00 00 00 80
   result |= actual1; // 00 00 00 00
