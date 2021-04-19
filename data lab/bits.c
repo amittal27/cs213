@@ -341,8 +341,15 @@ int sign(int x) { //done - 10 ops
  *   Max ops: 24
  *   Rating: 3
  */
-int isLessOrEqual(int x, int y) {
-  // case 1: different signs
+int isLessOrEqual(int x, int y) { // done - 23 ops
+  // case 1: different signs; negative -> #_shifted is -1; positive -> 0
+  int x_shifted = x >> 31;
+  int y_shifted = y >> 31;
+  //printf("X: %d %d %d\n", x, x_shifted, !!x_shifted);
+  //printf("Y: %d %d %d\n", y, y_shifted, !y_shifted);
+  int diff_signs = (!!x_shifted & !y_shifted);// | (!x_shifted & !!y_shifted);
+  int diff_signs_2 = diff_signs | (!x_shifted & !!y_shifted);
+  //printf("diff_signs: %d\n", diff_signs);
 
   // case 2: same sign
   // y-x >= 0 if true; y-x < 0 if false
@@ -354,7 +361,7 @@ int isLessOrEqual(int x, int y) {
   int is_less_or_equal = is_negative + 1;
   
   // else (sum < 0); return 0
-  return is_less_or_equal;// | !!sum;
+  return (!!is_less_or_equal & !diff_signs_2) | !!diff_signs;// | !!sum;
 }
 /* 
  * isPositive - return 1 if x > 0, return 0 otherwise 
