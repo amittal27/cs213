@@ -384,20 +384,11 @@ int isPositive(int x) { // done - 7 ops
  *   Max ops: 10
  *   Rating: 4
  */
-int absVal(int x) {
-  // max positive number
-  // and that with x
+int absVal(int x) { // done - 7 ops
+  int x_sign = x >> 31; // 0 if positive, -1 if negative
+  int negative_x = ~x + 1;
 
-  //return ~x + 1;
-
-  int max_positive = 255; // two-bit number
-  
-  max_positive |= max_positive << 8;
-  max_positive |= max_positive << 15;
-
-  printf("%d\n", (1 & !(x >> 32)));
-
-  return max_positive & ~x + (1 & !(x >> 32));
+  return (x_sign ^ x) + (!!x_sign);
 }
 /* FP operations */
 /* 
