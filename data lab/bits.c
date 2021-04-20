@@ -221,23 +221,20 @@ int allEvenBits(int x) { //done - 7 ops
  *  Max ops: 25
  *  Rating: 2
  */
-int byteSwap(int x, int n, int m) {  // x = 80 00 00 00, n = 0 m = 3
-  // isolate bits n and m -- use shifts?
-  int n_bytes 
-  int byte1_pattern = 255 << 8 * n; // 00 00 00 FF
-  int byte2_pattern = 255 << 8 * m; // FF 00 00 00
+int byteSwap(int x, int n, int m) {  // x = 80 20 54 10, n = 0 m = 3
+  n = n << 3;
+  m = m << 3;
+  int byte1_pattern = 255 << n; // 00 00 00 FF
+  int byte2_pattern = 255 << m; // FF 00 00 00
   int sum_bytes = byte1_pattern | byte2_pattern; // FF 00 00 FF
   int negated_sum_bytes = ~sum_bytes; // 00 FF FF 00
-  int result = negated_sum_bytes & x; // 00 00 00 00; 0s in place of swap bytes
-  unsigned int actual1 = byte1_pattern & x; // 00 00 00 00
-  unsigned int actual2 = byte2_pattern & x; // 80 00 00 00
+  int result = negated_sum_bytes & x; // 00 20 54 00; 0s in place of swap bytes
+  int actual1 = byte1_pattern & x; // 00 00 00 10
+  int actual2 = byte2_pattern & x; // 80 00 00 00
 
-  // swap using XOR with 000..nnnn...0000..mmmm
-  actual1 = actual1 >> 8*n << 8*m; // 00 00 00 00
-  actual2 = actual2 >> 8*m << 8*n; // 00 00 00 80
-  result |= actual1; // 00 00 00 00
-  result |= actual2; // 00 00 00 80
-  return result;
+  actual1 = (actual1 >> n << m) & byte2_pattern; // 10 00 00 00
+  actual2 = (actual2 >> m << n) & byte1_pattern; // 00 00 00 80
+  return result | actual1 | actual2;
 }
 /* 
  * conditional - same as x ? y : z 
