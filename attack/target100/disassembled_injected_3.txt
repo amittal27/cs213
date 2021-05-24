@@ -1,0 +1,10 @@
+
+injected_3.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <.text>:
+   0:	48 c7 c7 98 9e 62 55 	mov    $0x55629e98,%rdi
+   7:	48 83 c7 38          	add    $0x38,%rdi
+   b:	c3                   	retq   

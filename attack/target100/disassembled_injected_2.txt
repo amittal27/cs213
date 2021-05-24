@@ -1,0 +1,10 @@
+
+injected_2.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <.text>:
+   0:	48 c7 c7 eb 51 90 59 	mov    $0x599051eb,%rdi
+   7:	68 41 19 40 00       	pushq  $0x401941
+   c:	c3                   	retq   
