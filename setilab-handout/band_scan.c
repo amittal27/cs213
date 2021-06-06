@@ -73,19 +73,25 @@ int analyze_signal(signal* sig, int filter_order, int num_bands, double* lb, dou
   get_resources(&rstart,THIS_PROCESS);
   double start = get_seconds();
   unsigned long long tstart = get_cycle_count();
+  printf("init completed\n");
 
   double filter_coeffs[filter_order + 1];
   double band_power[num_bands];
+  printf("Iterating bands\n");
   for (int band = 0; band < num_bands; band++) {
     // Make the filter
+    printf("%d\n", band);
+    printf("generating band pass\n");
     generate_band_pass(sig->Fs,
                        band * bandwidth + 0.0001, // keep within limits
                        (band + 1) * bandwidth - 0.0001,
                        filter_order,
                        filter_coeffs);
+    printf("hamming window\n");
     hamming_window(filter_order,filter_coeffs);
 
     // Convolve
+    printf("convolving\n");
     convolve_and_compute_power(sig->num_samples,
                                sig->data,
                                filter_order,

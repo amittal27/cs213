@@ -15,7 +15,7 @@ endif
 
 
 
-all: libfilter.a band_scan pthread-ex parallel-sum-ex
+all: libfilter.a band_scan pthread-ex parallel-sum-ex p_band_scan
 
 
 libfilter.a : filter.o signal.o timing.o
@@ -39,8 +39,8 @@ band_scan: band_scan.c filter.h signal.h timing.h libfilter.a
 # following.  Note the use of the -pthread option
 # which is critical
 #
-#p_band_scan: p_band_scan.c filter.h signal.h timing.h libfilter.a 
-#	    $(CC) -pthread p_band_scan.c -L. -lfilter -lm -o p_band_scan
+p_band_scan: p_band_scan.c filter.h signal.h timing.h libfilter.a 
+	$(CC) -pthread p_band_scan.c -L. -lfilter -lm -o p_band_scan
 #
 
 clean-filter: 

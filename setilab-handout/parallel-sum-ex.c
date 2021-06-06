@@ -14,6 +14,13 @@ int num_procs;              // number of processors we will use
 pthread_t* tid;             // array of thread ids
 double* partial_sum;        // partial sums, one for each processor
 
+typedef struct {
+    int id;
+    int wish;
+  } worker_input;
+
+worker_input* inputs;
+
 
 // The following code reads the intel/amd cycle counter
 // This is the number of cycles since the machine was started
@@ -30,11 +37,17 @@ unsigned long long int rdtsc(void) {
   return ((unsigned long long)a) | (((unsigned long long)d) << 32);
 }
 
+int curr_id;
+int curr_wish;
+
 // Function run by each thread
 void* worker(void* arg) {
   long myid     = (long)arg;
   int blocksize = vector_len / num_threads; // note: floor
 
+  curr_id = inputs[myid].id;
+  curr_wish = inputs[myid].wish;
+  printf("process_id %d with wish %d\n", curr_id, curr_wish);
   // This figures out the chunk of the vector I should
   // work on based on my id
   int mystart = myid * blocksize;
@@ -73,6 +86,7 @@ int main(int argc, char* argv[]) {
   vector      = (double*)malloc(sizeof(double) * vector_len);
   tid         = (pthread_t*)malloc(sizeof(pthread_t) * num_threads);
   partial_sum = (double*)malloc(sizeof(double) * num_threads);
+  inputs = (worker_input*)malloc(sizeof(worker_input)*vector_len);
 
   if (!vector || !tid || !partial_sum) {
     fprintf(stderr, "cannot allocate memory\n");
@@ -100,7 +114,10 @@ int main(int argc, char* argv[]) {
   //          through
   //        (i+1)*floor(vector_size/num_threads) ]
   // the last thread will also handle the additional elements
+
   for (long i = 0; i < num_threads; i++) {
+    inputs[i].id = i;
+    inputs[i].wish = i*2;
     int returncode = pthread_create(&(tid[i]),  // thread id gets put here
                                     NULL, // use default attributes
                                     worker, // thread will begin in this function
