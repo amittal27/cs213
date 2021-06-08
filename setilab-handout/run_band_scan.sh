@@ -1,0 +1,1 @@
+./p_band_scan bin sig-0.bin 400000 32 10 #filter-order, n_bands
