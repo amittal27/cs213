@@ -13,8 +13,6 @@ else
   TARGET=host
 endif
 
-
-
 all: libfilter.a band_scan pthread-ex parallel-sum-ex p_band_scan
 
 
