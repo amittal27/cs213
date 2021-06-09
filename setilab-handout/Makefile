@@ -5,10 +5,10 @@ PHI_AR = /opt/mpss/3.3/sysroots/x86_64-mpsssdk-linux/usr/libexec/k1om-mpss-linux
 HOST_AR = ar
 
 ifeq ($(TARGET),phi)
-  CC=$(PHI_CC) -g -Wall -O3
+  CC=$(PHI_CC) -g -Wall -O3 -pipe -march=native
   AR=$(PHI_AR)
 else
-  CC=$(HOST_CC) -m64 -g -Wall -O3
+  CC=$(HOST_CC) -m64 -g -Wall -O3 -pipe -march=native
   AR=$(HOST_AR)
   TARGET=host
 endif
