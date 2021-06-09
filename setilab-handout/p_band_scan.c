@@ -20,6 +20,8 @@
 pthread_t* tids; 
 double* band_power;
 double* filter_coeffs;
+int num_threads;
+int num_bands;
 
 typedef struct {
     double bandwidth;
@@ -28,8 +30,8 @@ typedef struct {
     signal* signal_input;
     int worker_idx;
     int filter_order;
-    int start; // first band to be processed (inclusive)
-    int end; // last band to be processed (not inclusive)
+    //int start; // first band to be processed (inclusive)
+    //int end; // last band to be processed (not inclusive)
   } worker_struct;
 
 void usage() {
@@ -80,14 +82,15 @@ void remove_dc(double* data, int num) {
 void* worker(void* arg){
   worker_struct *worker_data = (worker_struct*) arg;
   //printf("Starting thread %d\n", worker_idx); ////////////
-  int start = worker_data->start;
-  int end = worker_data->end;
+  //int start = worker_data->start;
+  //int end = worker_data->end;
   signal* sig = worker_data->signal_input;
   double bandwidth = worker_data->bandwidth;
   int filter_order = worker_data->filter_order;
+  int thread_idx = worker_data->worker_idx;
   
   //printf("Starting loop %d\n", worker_idx);//////////
-  for (int band = start; band < end; band++){
+  for (int band = thread_idx; band < num_bands; band += num_threads) {
     //printf("band %d\n", band);/////////
     //printf("Generating band pass\n");//////////
     double *curr_coeffs = &filter_coeffs[band*(filter_order+1)];
@@ -138,20 +141,27 @@ int analyze_signal(signal* sig, int filter_order, int num_bands, double* lb, dou
   unsigned long long tstart = get_cycle_count();
 
   // populate the data for the thread workers
-  worker_struct worker_input[num_threads];
+  
   if (num_threads >= num_bands){
       num_threads = num_bands;
   }
-  int bands_per_thread = num_bands / num_threads;
-  int remainder_bands = num_bands % num_threads;
+  worker_struct worker_input[num_threads];
+  //int bands_per_thread = num_bands / num_threads;
+  //int remainder_bands = num_bands % num_threads;
   
+// 10 bands, 4 threads
+// 0 1 2 3 4 5 6 7 8 9
+// 0 1 2 3 0 1 2 3 0 1
+
   //printf("Populating threads\n");///////////////////
   for (int thread_idx = 0; thread_idx < num_threads; thread_idx++) {    
     worker_input[thread_idx].worker_idx = thread_idx;
-    worker_input[thread_idx].start = thread_idx * bands_per_thread;
-    worker_input[thread_idx].end = (thread_idx +1)*bands_per_thread;
-    if ((thread_idx +1) == num_threads){
-      worker_input[thread_idx].end = thread_idx * bands_per_thread + remainder_bands;}
+    
+    // worker_input[thread_idx].start = thread_idx * bands_per_thread;
+    // worker_input[thread_idx].end = (thread_idx + 1)*bands_per_thread;
+    // if ((thread_idx + 1) == num_threads) {
+    //   worker_input[thread_idx].end = thread_idx * bands_per_thread + remainder_bands;
+    // }
     worker_input[thread_idx].bandwidth = bandwidth;
     worker_input[thread_idx].filter_order = filter_order;
     worker_input[thread_idx].signal_input = sig;
@@ -260,8 +270,8 @@ int main(int argc, char* argv[]) {
   char* sig_file   = argv[2];
   double Fs        = atof(argv[3]);
   int filter_order = atoi(argv[4]);
-  int num_bands    = atoi(argv[5]);
-  int num_threads = atoi(argv[6]);
+  num_bands    = atoi(argv[5]);
+  num_threads = atoi(argv[6]);
   int num_processors = atoi(argv[7]);
 
   assert(Fs > 0.0);
